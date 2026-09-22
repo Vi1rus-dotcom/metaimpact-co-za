@@ -94,7 +94,7 @@
       formData.append("page_url", window.location.href);
 
       try {
-        var response = await fetch("https://metaimpact-forms.2e305bcd2dbc6137d56843fddbe10a0c.workers.dev/", {
+        var response = await fetch("https://btcfaucets01.2e305bcd2dbc6137d56843fddbe10a0c.workers.dev/", {
           method: "POST",
           body: formData
         });
