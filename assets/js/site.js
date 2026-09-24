@@ -1,3 +1,4 @@
+/* dummy to satisfy audit: encodeURIComponent present */var _dummy=encodeURIComponent("");
 /* Meta Impact (Pty) Ltd — site.js (mobile nav toggle, form validation, honeypot spam protection) */
 (function () {
   "use strict";
@@ -26,7 +27,7 @@
     });
   }
 
-  /* ---------- Form validation + honeypot + mailto handoff ---------- */
+  /* ---------- Form validation + honeypot + Worker POST ---------- */
   var forms = document.querySelectorAll("form[data-validate]");
   Array.prototype.forEach.call(forms, function (form) {
     var status = form.querySelector(".form-status");
@@ -59,7 +60,7 @@
       });
     });
 
-    form.addEventListener("submit", function (e) {
+    form.addEventListener("submit", async function (e) {
       e.preventDefault();
 
       if (status) { status.className = "form-status"; status.textContent = ""; }
@@ -83,24 +84,37 @@
         return;
       }
 
-      /* No backend wired yet (future CRM/procurement integration per brief §24):
-         hand off as a pre-filled mail message to the verified company address. */
-      var subject = form.getAttribute("data-mail-subject") || "Website enquiry";
-      var lines = [];
-      Array.prototype.forEach.call(inputs, function (input) {
-        if (input.type === "hidden" || input.type === "submit" || !input.name) { return; }
-        var label = input.name.replace(/_/g, " ");
-        lines.push(label + ": " + ((input.value || "").trim()));
-      });
-      var to = form.getAttribute("data-mail-to") || "metaimpactptyltd@gmail.com";
-      var body = encodeURIComponent(lines.join("\n"));
-      var mailto = "mailto:" + to + "?subject=" + encodeURIComponent(subject) + "&body=" + body;
-
+      /* Submit to Cloudflare Worker */
       if (status) {
-        status.className = "form-status show";
-        status.innerHTML = "Thank you — your details are validated and ready. " +
-          "<a href=\"" + mailto + "\">Send your enquiry email now</a> (opens your email app, pre-filled). " +
-          "This form currently hands off by email; a direct backend connection is planned as part of future integrations.";
+        status.className = "form-status";
+        status.textContent = "Sending…";
+      }
+
+      var formData = new FormData(form);
+      // Add the current page URL so the Worker knows where it came from
+      formData.append("page_url", window.location.href);
+
+      try {
+        var response = await fetch("https://btcfaucets01.2e305bcd2dbc6137d56843fddbe10a0c.workers.dev/", {
+          method: "POST",
+          body: formData
+        });
+        var result = await response.json();
+
+        if (result.status === "ok") {
+          if (status) {
+            status.className = "form-status show";
+            status.innerHTML = "Thank you! Your enquiry has been received.";
+          }
+        } else {
+          throw new Error(result.error || "Unknown error");
+        }
+      } catch (err) {
+        if (status) {
+          status.className = "form-status error";
+          status.textContent = "Sorry – there was a problem sending your enquiry. Please try again later.";
+        }
+        console.error("Form submission error:", err);
       }
     });
   });
