@@ -61,8 +61,8 @@ header{
 }
 .nav-row{display:flex; align-items:center; justify-content:space-between; height:112px;}
 .wordmark{display:flex; align-items:center;}
-.logo-img{height:62px; width:auto; display:block;}
-.footer-brand .logo-img{height:52px; margin-bottom:20px;}
+.logo-img{height:80px; width:auto; display:block;}
+.footer-brand .logo-img{height:60px; margin-bottom:20px;}
 @media (max-width:560px){ .nav-row{height:88px;} .logo-img{height:44px;} }
 .primary-nav{display:flex; gap:2px;}
 .primary-nav a{
