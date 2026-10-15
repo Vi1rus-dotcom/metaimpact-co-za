@@ -63,7 +63,7 @@ header{
 .wordmark{display:flex; align-items:center;}
 .logo-img{height:80px; width:auto; display:block;}
 .footer-brand .logo-img{height:60px; margin-bottom:20px;}
-@media (max-width:560px){ .nav-row{height:88px;} .logo-img{height:44px;} }
+@media (max-width:560px){ .nav-row{height:100px;} .logo-img{height:60px;} }
 .primary-nav{display:flex; gap:2px;}
 .primary-nav a{
     color:var(--graphite-300); font-size:0.92rem; padding:10px 12px;
