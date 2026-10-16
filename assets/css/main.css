@@ -390,3 +390,7 @@ footer .wrap{ position:relative; z-index:1; }
     .hero-meta{ gap:20px; }
     .footer-grid{ grid-template-columns:1fr; }
 }
+
+/* Director portrait: show the full photo (scoped variant, director card only) */
+.proj-media.portrait{ height:auto; }
+.proj-media.portrait img{ position:static; width:auto; max-width:100%; height:auto; margin:0 auto; }
